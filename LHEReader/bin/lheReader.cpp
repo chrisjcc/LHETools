@@ -75,8 +75,7 @@ void commandLineParameters::parseCommandLine(int argc, char **argv)
       infile.push_back(input);      
 
       while (optind < argc && *argv[optind] != '-'){
-	infile.push_back(argv[optind]);
-	optind++;
+	infile.push_back(argv[optind++]);
       }
       break;
     case 'o':
