@@ -75,8 +75,7 @@ void commandLineParameters::parseCommandLine(int argc, char **argv)
       infile.push_back(input);      
 
       while (optind < argc && *argv[optind] != '-'){
-	getArg(input, optarg);
-	infile.push_back(input);
+	infile.push_back(argv[optind]);
 	optind++;
       }
       break;
@@ -96,7 +95,7 @@ void commandLineParameters::parseCommandLine(int argc, char **argv)
       getArg(Debug, optarg);
       break;           
     case 'h':
-      std::cout << "synopsis: lheReader -i <input lhe file> -o <target output file>\n"
+      std::cout << "synopsis: lheReader -i <set of input lhe files> -o <target output file>\n"
 		<< "-r [run number] -e [event number] -l [lumi number] -d [debug mode]" << std::endl;
       exit(1);
       break;      
@@ -397,12 +396,12 @@ void lheReader::setLumi(const char *l)
 
 int main(int argc, char **argv)
 {
+  commandLineParameters *args = new commandLineParameters();
+
   lheReader *handler = new lheReader();
 
-  commandLineParameters *args = new commandLineParameters();
-  
   if (argc < 2) {  
-    std::cout << "Usage: " << argv[0] << " -i <input.lhe> -o <output.root> -r [run] -e [event] -l [lumi] -d [debug flag]" << std::endl;
+    std::cout << "Usage: " << argv[0] << " -i <input1.lhe> <input2.lhe> -o <output.root> -r [run] -e [event] -l [lumi] -d [debug flag]" << std::endl;
     return 1;
   }
     
