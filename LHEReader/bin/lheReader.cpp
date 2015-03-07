@@ -17,6 +17,7 @@
 #include <TTree.h>
 #include <TObject.h>
 #include <TLorentzVector.h>
+#include <TPRegexp.h>
 
 #include <iostream>
 #include <cstdlib>
@@ -221,7 +222,7 @@ void lheReader::ntuplizer(TString output)
 	while (getline(**fileinput, lheline)) { 
 
 	  // Ignore #-tag comments, specially needed for LHE files with jet matching and model information lines within the event block
-          if (lheline[0] == '#')
+	  if (TPRegexp("^#+").MatchB(lheline))
             continue;
 
 	  // Find begining of event
@@ -356,9 +357,12 @@ void lheReader::ntuplizer(TString output)
 	  }
 	} // end while still lines in file loop
       } // end if file open
+      else {
+	std::cout << "A file failed to open" << std::endl;
+      }      
     } // end for input fils loop
   } // end of if input file is not empty
-  
+    
   // output file contains information of input files used
   label = labelString.Data();
   label.Write("lheFileNames", TObject::kOverwrite);
