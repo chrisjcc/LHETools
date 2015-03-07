@@ -92,8 +92,10 @@ class lheReader {
     Int_t    event_number;
     Int_t    lumi_number;
 
-  protected:
+    TString labelString;
+    TObjString label;
 
+  protected:
 };
 
 #endif

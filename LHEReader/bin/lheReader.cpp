@@ -159,6 +159,7 @@ void lheReader::lhefile(std::vector<std::string> lhefilename)
   for(int i = 0; i < (int)lhefilename.size(); ++i) {
     inputfiles->push_back(new std::ifstream);
     (*inputfiles)[i]->open(lhefilename[i]);
+    labelString += "\n" + lhefilename[i];
   }
 }
 
@@ -218,6 +219,10 @@ void lheReader::ntuplizer(TString output)
 	}
 	
 	while (getline(**fileinput, lheline)) { 
+
+	  // Ignore #-tag comments, specially needed for LHE files with jet matching and model information lines within the event block
+          if (lheline[0] == '#')
+            continue;
 
 	  // Find begining of event
 	  if (lheline == beginevent) {
@@ -354,6 +359,10 @@ void lheReader::ntuplizer(TString output)
     } // end for input fils loop
   } // end of if input file is not empty
   
+  // output file contains information of input files used
+  label = labelString.Data();
+  label.Write("lheFileNames", TObject::kOverwrite);
+
   LHETree->Print();
   LHETree->Write("",TObject::kOverwrite);
 
