@@ -11,6 +11,5 @@ clang++ `root-config --cflags --glibs` -std=c++11 -stdlib=libstdc++ bin/lheReade
 # Usage with python run script
 python runLHEreader.py output.root inputfolder
 
-# Usage standalone (very important -i before EACH input file):
-lheReader -i [input_1.lhe] -i [input_2.lhe] -o [output.root] -r [run] -e [event] -l [lumi] -d [debug mode]
-
+# Usage
+lheReader -i [input_1.lhe] [input_2.lhe] -o [output.root] -r [run] -e [event] -l [lumi] -d [debug mode]
