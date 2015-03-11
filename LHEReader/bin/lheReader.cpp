@@ -160,7 +160,6 @@ void lheReader::lhefile(std::vector<std::string> lhefilename)
   for (int i = 0; i < (int)lhefilename.size(); ++i) {
     inputfiles->insert(std::pair<std::string, std::ifstream*>(lhefilename[i], new std::ifstream));
     (*inputfiles)[lhefilename[i]]->open(lhefilename[i], std::ifstream::in);
-    labelString += "\n" + lhefilename[i]; 
   }
 }
 
@@ -216,13 +215,16 @@ void lheReader::ntuplizer(TString output)
 	
 	if (m_debug) {
 	  std::cout << "File is open!!" << std::endl;
-	}
-	
+	}       
+
 	while (getline(*fileinput->second, lheline)) { 
 
 	  // Ignore #-tag comments, especially needed for LHE files with jet matching and model information within the event block
 	  if (TPRegexp("^#+").MatchB(lheline))
             continue;
+
+	  // Store name of input file 
+	  labelString += "\n" + fileinput->first;
 
 	  // Find begining of event
 	  if (lheline == beginevent) {
