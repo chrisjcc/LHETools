@@ -13,3 +13,6 @@ python runLHEreader.py output.root inputfolder
 
 # Usage
 lheReader -i [input_1.lhe] [input_2.lhe] -o [output.root] -r [run] -e [event] -l [lumi] -d [debug mode]
+
+# To printout out input file names included in the output file execute on the ROOT commmand prompt
+lheFileNames->Print()
