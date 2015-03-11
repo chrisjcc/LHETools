@@ -155,18 +155,17 @@ void lheReader::setDebug(const char *db)
 
 void lheReader::lhefile(std::vector<std::string> lhefilename)
 {
-  inputfiles  = new std::vector<std::ifstream*>;
-
+  inputfiles  = new std::map<std::string, std::ifstream*>;   
+  
   for(int i = 0; i < (int)lhefilename.size(); ++i) {
-    inputfiles->push_back(new std::ifstream);
-    (*inputfiles)[i]->open(lhefilename[i]);
-    labelString += "\n" + lhefilename[i];
+    inputfiles->insert(std::pair<std::string, std::ifstream*>(lhefilename[i], new std::ifstream));
+    (*inputfiles)[lhefilename[i]]->open(lhefilename[i], std::ifstream::in);
+    labelString += "\n" + lhefilename[i]; 
   }
 }
 
 void lheReader::ntuplizer(TString output)
 {
-
   std::string lheline;
   std::string beginevent = "<event>";
   std::string endevent = "</event>";
@@ -209,17 +208,17 @@ void lheReader::ntuplizer(TString output)
 
   if(!inputfiles->empty()) {
     
-    std::vector<std::ifstream*>::const_iterator fileinput;
+    std::map<std::string, std::ifstream*>::const_iterator fileinput;
     
     for (fileinput = inputfiles->begin(); fileinput != inputfiles->end(); ++fileinput) {
       
-      if ((*fileinput)->is_open()) { 
+      if ((fileinput->second)->is_open()) { 
 	
 	if (m_debug) {
 	  std::cout << "File is open!!" << std::endl;
 	}
 	
-	while (getline(**fileinput, lheline)) { 
+	while (getline(*fileinput->second, lheline)) { 
 
 	  // Ignore #-tag comments, specially needed for LHE files with jet matching and model information lines within the event block
 	  if (TPRegexp("^#+").MatchB(lheline))
@@ -358,7 +357,7 @@ void lheReader::ntuplizer(TString output)
 	} // end while still lines in file loop
       } // end if file open
       else {
-	std::cout << "A file failed to open" << std::endl;
+	std::cout << "The file " << fileinput->first << " failed to open" << std::endl;
       }      
     } // end for input fils loop
   } // end of if input file is not empty
@@ -368,7 +367,7 @@ void lheReader::ntuplizer(TString output)
   label.Write("lheFileNames", TObject::kOverwrite);
 
   LHETree->Print();
-  LHETree->Write("",TObject::kOverwrite);
+  LHETree->Write("", TObject::kOverwrite);
 
   fileoutput->Close();
 }
